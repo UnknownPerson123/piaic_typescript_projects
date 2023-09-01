@@ -46,8 +46,10 @@ function userAuthentication(index: number, userPin?: number) {
   return true;
 }
 
-async function repeat(message: string) {
-  console.log("Not enough money");
+async function repeat(message: string, type?: string) {
+  if (type !== "error") {
+    console.log("Not enough money");
+  }
   const rep = await createCLIInputs(
     "list",
     "rep",
@@ -146,7 +148,7 @@ async function atmOptions() {
     "list",
     "atm",
     "Which service you want to have.",
-    ["Cash Withdraw", "Fast Cash", "Transfer Amount"]
+    ["Cash Withdraw", "Fast Cash", "Transfer Amount", "View Balance"]
   );
   if (atmOptions.atm == "Fast Cash") {
     const fastCash = await createCLIInputs(
@@ -172,6 +174,10 @@ async function atmOptions() {
       "How much money you want to transfer"
     );
     transferAmount(userId.id, amount.amount);
+    await repeat("Want to do other transaction?", "error");
+  } else if (atmOptions.atm == "View Balance") {
+    console.log(`Your total balance is ${currentUser.accountBalance}`);
+    await repeat("Want to do other transaction?", "error");
   }
 }
 
